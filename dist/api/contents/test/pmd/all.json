@@ -1,0 +1,29 @@
+{
+  "content": [
+    {
+      "content": null,
+      "created": "2024-10-07T04:31:27.014932Z",
+      "format": null,
+      "hash": null,
+      "hash_algorithm": null,
+      "last_modified": "2024-10-07T04:30:51.255688Z",
+      "mimetype": null,
+      "name": "tensile_test_ontology.ipynb",
+      "path": "test/pmd/tensile_test_ontology.ipynb",
+      "size": 85727,
+      "type": "notebook",
+      "writable": true
+    }
+  ],
+  "created": "2024-10-07T04:31:27.014932Z",
+  "format": "json",
+  "hash": null,
+  "hash_algorithm": null,
+  "last_modified": "2024-10-07T04:31:27.014932Z",
+  "mimetype": null,
+  "name": "pmd",
+  "path": "test/pmd",
+  "size": null,
+  "type": "directory",
+  "writable": true
+}
