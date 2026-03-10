@@ -1,0 +1,9 @@
+{
+	"@metadata": {
+		"authors": [
+			"Simon Stier"
+		]
+	},
+	"jupyter-lite-desc": "Provides JupyterLite notebooks directly in your wiki",
+	"jupyter-lite-name": "JupyterLite"
+}

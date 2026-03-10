@@ -1,0 +1,21 @@
+{
+    "manifest_version":2,
+    "name":"JupyterLite",
+    "version":"0.1.0",
+    "author":[
+        "[https://github.com/simontaurus Simon Stier]"
+    ],
+    "url":"https://github.com/OpenSemanticLab/mediawiki-extensions-JupyterLite",
+    "descriptionmsg":"jupyter-lite-desc",
+    "namemsg":"jupyter-lite-name",
+    "license-name":"AGPL-3.0-or-later",
+    "type":"editor",
+    "requires":{
+        "MediaWiki":">= 1.39"
+    },
+    "MessagesDirs":{
+        "JupyterLite":[
+            "i18n"
+        ]
+    }
+}
