@@ -45,9 +45,7 @@
 			"remoteExtPath": "JupyterLite/modules/ext.osw.ui.jupyterlite",
 			"dependencies": [
 				"mediawiki.util",
-				"mediawiki.api",
-				"mediawiki.notify",
-				"jquery"
+				"mediawiki.api"
 			],
 			"scripts": [
 				"jupyterlite.js"
