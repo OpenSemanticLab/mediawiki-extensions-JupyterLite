@@ -1,0 +1,69 @@
+{
+	"name": "JupyterLite",
+	"version": "0.1.0",
+	"author": [
+		"Simon Stier"
+	],
+	"url": "https://github.com/OpenSemanticLab/mediawiki-extensions-JupyterLite",
+	"descriptionmsg": "jupyterlite-desc",
+	"license-name": "Apache-2.0",
+	"type": "media",
+	"requires": {
+		"MediaWiki": ">= 1.43.0"
+	},
+	"AutoloadClasses": {
+		"MediaWiki\\Extension\\JupyterLite\\ApiJupyterLiteConfig": "includes/ApiJupyterLiteConfig.php",
+		"MediaWiki\\Extension\\JupyterLite\\JupyterLiteHooks": "includes/JupyterLiteHooks.php"
+	},
+	"APIModules": {
+		"jupyterliteconfig": "MediaWiki\\Extension\\JupyterLite\\ApiJupyterLiteConfig"
+	},
+	"Hooks": {
+		"BeforePageDisplay": "MediaWiki\\Extension\\JupyterLite\\JupyterLiteHooks::onBeforePageDisplay",
+		"ResourceLoaderGetConfigVars": "MediaWiki\\Extension\\JupyterLite\\JupyterLiteHooks::onResourceLoaderGetConfigVars"
+	},
+	"MessagesDirs": {
+		"JupyterLite": [
+			"i18n"
+		]
+	},
+	"AvailableRights": [
+		"jupyterlite-use"
+	],
+	"GroupPermissions": {
+		"user": {
+			"jupyterlite-use": true
+		}
+	},
+	"ResourceFileModulePaths": {
+		"localBasePath": "",
+		"remoteExtPath": "JupyterLite"
+	},
+	"ResourceModules": {
+		"ext.osw.ui.jupyterlite": {
+			"localBasePath": "modules/ext.osw.ui.jupyterlite",
+			"remoteExtPath": "JupyterLite/modules/ext.osw.ui.jupyterlite",
+			"dependencies": [
+				"mediawiki.util"
+			],
+			"scripts": [
+				"jupyterlite.js"
+			]
+		}
+	},
+	"config": {
+		"JupyterLiteEnabled": {
+			"value": false,
+			"description": "Master switch. The static site is served by the web server whether or not this is set, so this only governs the launcher and the config API."
+		},
+		"JupyterLiteBasePath": {
+			"value": "/w/extensions/JupyterLite/dist/",
+			"description": "Where the built site is served from. Must be same-origin with the wiki: that is what lets the in-browser kernel reach the wiki API with the user's own session instead of a credential."
+		},
+		"JupyterLiteSettings": {
+			"value": {},
+			"description": "Server-side defaults handed to the in-browser agent, e.g. {\"provider\": \"azure-foundry-anthropic\", \"model\": \"...\", \"baseURL\": \"https://.../llm\"}. Applied as defaults only: a user who has changed the setting keeps their choice. Never put an API key here - this file is readable by anyone who can read the container, and the value is served to every entitled user."
+		}
+	},
+	"manifest_version": 2
+}

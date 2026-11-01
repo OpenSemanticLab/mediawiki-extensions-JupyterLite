@@ -1,0 +1,3 @@
+# The built JupyterLite site. Produced by the osw-jupyterlite-ai flavour and pulled in
+# at deploy time - it is tens of MB of generated assets and does not belong in git.
+dist/

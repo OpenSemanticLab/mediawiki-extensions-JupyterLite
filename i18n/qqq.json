@@ -1,0 +1,13 @@
+{
+	"@metadata": {
+		"authors": [
+			"Simon Stier"
+		]
+	},
+	"jupyterlite-desc": "{{desc|name=JupyterLite|url=https://github.com/OpenSemanticLab/mediawiki-extensions-JupyterLite}}",
+	"right-jupyterlite-use": "{{doc-right|jupyterlite-use}}",
+	"action-jupyterlite-use": "{{doc-action|jupyterlite-use}}",
+	"apierror-jupyterlite-disabled": "Shown when action=jupyterliteconfig is called while $wgJupyterLiteEnabled is false.",
+	"apihelp-jupyterliteconfig-description": "{{doc-apihelp-description|jupyterliteconfig}}",
+	"apihelp-jupyterliteconfig-example": "{{doc-apihelp-example|jupyterliteconfig}}"
+}

@@ -1,0 +1,13 @@
+{
+	"@metadata": {
+		"authors": [
+			"Simon Stier"
+		]
+	},
+	"jupyterlite-desc": "Serves a JupyterLite sandbox from the wiki's own origin, so in-browser Python can use the reader's existing wiki session.",
+	"right-jupyterlite-use": "Use the JupyterLite sandbox",
+	"action-jupyterlite-use": "use the JupyterLite sandbox",
+	"apierror-jupyterlite-disabled": "The JupyterLite sandbox is not enabled on this wiki.",
+	"apihelp-jupyterliteconfig-description": "Return this wiki's default configuration for the in-browser notebook agent.",
+	"apihelp-jupyterliteconfig-example": "Get the sandbox configuration"
+}
