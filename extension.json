@@ -44,10 +44,20 @@
 			"localBasePath": "modules/ext.osw.ui.jupyterlite",
 			"remoteExtPath": "JupyterLite/modules/ext.osw.ui.jupyterlite",
 			"dependencies": [
-				"mediawiki.util"
+				"mediawiki.util",
+				"mediawiki.api",
+				"mediawiki.notify",
+				"jquery"
 			],
 			"scripts": [
 				"jupyterlite.js"
+			],
+			"messages": [
+				"jupyterlite-portlet-open",
+				"jupyterlite-portlet-tooltip",
+				"jupyterlite-open-notebook",
+				"jupyterlite-open-notebook-tooltip",
+				"jupyterlite-notebook-missing"
 			]
 		}
 	},

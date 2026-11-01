@@ -102,6 +102,95 @@
 		return handle;
 	}
 
+	/**
+	 * The uploaded file this page is about, if it is a notebook.
+	 *
+	 * Only `.ipynb` on a File: page. Offering "open in sandbox" on a PDF would open an
+	 * empty sandbox and look broken, and the sandbox refuses anything that is not a wiki
+	 * file anyway - better not to offer it than to offer it and have it declined.
+	 *
+	 * @return {string|null} the file page title
+	 */
+	function notebookOnThisPage() {
+		if ( mw.config.get( 'wgNamespaceNumber' ) !== 6 ) {
+			return null;
+		}
+		var title = mw.config.get( 'wgPageName' ) || '';
+		return /\.ipynb$/i.test( title ) ? title.replace( /_/g, ' ' ) : null;
+	}
+
+	/**
+	 * Resolve a File: page title to the url the sandbox will accept.
+	 *
+	 * @param {string} title
+	 * @return {Promise<string|null>}
+	 */
+	function fileUrl( title ) {
+		return new mw.Api().get( {
+			action: 'query',
+			prop: 'imageinfo',
+			iiprop: 'url',
+			titles: title,
+			formatversion: 2
+		} ).then( function ( data ) {
+			var page = ( ( data.query || {} ).pages || [] )[ 0 ];
+			var info = page && page.imageinfo && page.imageinfo[ 0 ];
+			return info ? info.url : null;
+		} );
+	}
+
+	/**
+	 * Put the sandbox where people will find it.
+	 *
+	 * A toolbox link everywhere, and on a notebook's own file page a second one that
+	 * opens that notebook. Without this the sandbox exists but nothing in the wiki
+	 * mentions it, which is indistinguishable from it not being installed.
+	 */
+	function addLinks() {
+		if ( !BASE ) {
+			// No base path means the extension is off, or this reader may not use it.
+			return;
+		}
+		var toolbox = mw.util.addPortletLink(
+			'p-tb',
+			'#',
+			mw.msg( 'jupyterlite-portlet-open' ),
+			't-jupyterlite',
+			mw.msg( 'jupyterlite-portlet-tooltip' )
+		);
+		if ( toolbox ) {
+			$( toolbox ).on( 'click', function ( event ) {
+				event.preventDefault();
+				open();
+			} );
+		}
+
+		var notebook = notebookOnThisPage();
+		if ( !notebook ) {
+			return;
+		}
+		var link = mw.util.addPortletLink(
+			'p-views',
+			'#',
+			mw.msg( 'jupyterlite-open-notebook' ),
+			'ca-jupyterlite',
+			mw.msg( 'jupyterlite-open-notebook-tooltip' )
+		);
+		if ( !link ) {
+			return;
+		}
+		$( link ).on( 'click', function ( event ) {
+			event.preventDefault();
+			fileUrl( notebook ).then( function ( url ) {
+				if ( !url ) {
+					mw.notify( mw.msg( 'jupyterlite-notebook-missing' ), { type: 'warn' } );
+					return;
+				}
+				open( { fromURL: url } );
+			} );
+		} );
+	}
+
 	mw.osw = mw.osw || {};
 	mw.osw.jupyterlite = {
 		basePath: BASE,
@@ -111,4 +200,6 @@
 		// link rather than after the user clicks it.
 		allowedFileUrl: allowedFileUrl
 	};
+
+	$( addLinks );
 }() );

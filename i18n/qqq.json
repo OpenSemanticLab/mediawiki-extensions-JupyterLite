@@ -9,5 +9,10 @@
 	"action-jupyterlite-use": "{{doc-action|jupyterlite-use}}",
 	"apierror-jupyterlite-disabled": "Shown when action=jupyterliteconfig is called while $wgJupyterLiteEnabled is false.",
 	"apihelp-jupyterliteconfig-description": "{{doc-apihelp-description|jupyterliteconfig}}",
-	"apihelp-jupyterliteconfig-example": "{{doc-apihelp-example|jupyterliteconfig}}"
+	"apihelp-jupyterliteconfig-example": "{{doc-apihelp-example|jupyterliteconfig}}",
+	"jupyterlite-portlet-open": "Toolbox link that opens an empty sandbox. Keep it short - it sits in the sidebar.",
+	"jupyterlite-portlet-tooltip": "Tooltip for the toolbox link. Says plainly that code there runs with the reader's own wiki rights.",
+	"jupyterlite-open-notebook": "Tab on a File: page for a .ipynb, opening that notebook in the sandbox.",
+	"jupyterlite-open-notebook-tooltip": "Tooltip for that tab.",
+	"jupyterlite-notebook-missing": "Shown when the file page exists but has no uploaded file behind it."
 }

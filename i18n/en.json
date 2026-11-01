@@ -9,5 +9,10 @@
 	"action-jupyterlite-use": "use the JupyterLite sandbox",
 	"apierror-jupyterlite-disabled": "The JupyterLite sandbox is not enabled on this wiki.",
 	"apihelp-jupyterliteconfig-description": "Return this wiki's default configuration for the in-browser notebook agent.",
-	"apihelp-jupyterliteconfig-example": "Get the sandbox configuration"
+	"apihelp-jupyterliteconfig-example": "Get the sandbox configuration",
+	"jupyterlite-portlet-open": "Python sandbox",
+	"jupyterlite-portlet-tooltip": "Open a Python notebook that runs in your browser and can read and write this wiki as you",
+	"jupyterlite-open-notebook": "Open in sandbox",
+	"jupyterlite-open-notebook-tooltip": "Open this notebook in the in-browser Python sandbox",
+	"jupyterlite-notebook-missing": "This notebook could not be found on the wiki."
 }
