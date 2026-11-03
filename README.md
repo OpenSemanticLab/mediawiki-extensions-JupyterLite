@@ -8,6 +8,32 @@ The site itself is built by
 into `dist/`; this extension is only the launcher, the per-wiki configuration and the
 right that gates them.
 
+## Usage
+
+The URLs this extension has always answered to, unchanged - anything linking to them
+keeps working:
+
+Open JupyterLite
+
+```
+<scriptpath>/extensions/JupyterLite/dist/lab/index.html
+```
+
+e.g.
+
+```
+/w/extensions/JupyterLite/dist/lab/index.html
+```
+
+Open a file directly
+
+```
+<scriptpath>/extensions/JupyterLite/dist/lab/index.html?fromURL=<fileUrl>
+```
+
+`<fileUrl>` must be one of this wiki's own uploads, served through `img_auth.php`.
+That restriction is new, and the reason is below.
+
 ## Why same-origin
 
 Because the sandbox is served from the wiki's own origin, the in-browser Python kernel
