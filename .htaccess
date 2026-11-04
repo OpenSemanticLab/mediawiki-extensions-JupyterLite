@@ -1,0 +1,43 @@
+# Caching policy for the built JupyterLite site under dist/.
+#
+# It lives here rather than in a web server config so that every installation carries it.
+# A deployment that fronts the wiki with its own proxy can do the same thing there, but it
+# should not have to.
+#
+# The problem this solves: JupyterLab stamps its build artifacts with a fixed, reproducible
+# mtime of 1985-10-26, and rsync preserves it. Served without an explicit Cache-Control,
+# a browser falls back to heuristic freshness - conventionally a tenth of the age implied
+# by Last-Modified - which from 1985 is on the order of years. lab/index.html would then
+# be reused long after a redeploy, pinning the old bundle.js?_=<hash> and with it the whole
+# asset set, while jupyter-lite.json and pypi/all.json (which carry real mtimes) refresh
+# within minutes. The resulting mix of new config and old bundle is worse than being
+# uniformly stale. scripts/deploy.sh in the osw-jupyterlite-ai flavour also normalises the
+# mtimes, which fixes the heuristic on servers where this file has no effect.
+#
+# Requires AllowOverride to permit FileInfo here, and mod_headers. Guarded so that a server
+# with neither simply ignores it instead of returning 500.
+
+<IfModule mod_headers.c>
+
+    # Entry points and metadata: always revalidate. These are small, and getting a stale
+    # one is what makes a redeploy invisible. no-cache permits caching but forces a
+    # conditional request, so an unchanged file still costs only a 304.
+    <FilesMatch "(index\.html|service-worker\.js|.*\.json)$">
+        Header set Cache-Control "no-cache"
+    </FilesMatch>
+
+    # Wheels are immutable by construction: the version is in the filename, and a changed
+    # package means a changed name. This is the part that makes a second visit fast, and
+    # it matters here more than usual - the closure is tens of MB and is fetched in the
+    # user's browser.
+    <FilesMatch "\.whl$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+
+</IfModule>
+
+<IfModule mod_mime.c>
+    # Pyodide streams-compiles its wasm, which requires the correct type; a generic
+    # octet-stream makes it fall back to a slower path or fail outright.
+    AddType application/wasm .wasm
+</IfModule>

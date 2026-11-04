@@ -87,6 +87,25 @@ Settings are applied as *defaults*: a user who has already chosen a provider kee
 choice, because JupyterLite stores user settings in the browser and they win over
 anything shipped with the site.
 
+## Caching
+
+The site is tens of MB fetched in the user's browser, so caching is not a detail. The
+shipped `.htaccess` revalidates the entry points (`index.html`, `service-worker.js`,
+`*.json`) and marks wheels immutable - their version is in the filename. It needs
+`AllowOverride` to permit `FileInfo` and `mod_headers` enabled; without either it is
+ignored rather than fatal, and a deployment fronted by its own proxy can set the same
+headers there.
+
+Do not rely on it alone. JupyterLab stamps build artifacts with a reproducible mtime of
+**1985-10-26**, and `rsync` preserves it. With no explicit `Cache-Control`, browsers fall
+back to heuristic freshness - roughly a tenth of the age implied by `Last-Modified`, which
+from 1985 is years. `lab/index.html` would then outlive a redeploy and pin the old
+`bundle.js?_=<hash>`, while `jupyter-lite.json` and the wheel index refresh within minutes
+because they carry real mtimes. New config against an old bundle is worse than uniform
+staleness, and no test that opens a fresh browser profile can see it. `scripts/deploy.sh`
+in the flavour therefore restamps `dist/` on every deploy, which fixes the heuristic
+everywhere regardless of server configuration.
+
 ## For callers
 
 ```js
