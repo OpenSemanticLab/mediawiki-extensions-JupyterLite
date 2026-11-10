@@ -197,7 +197,6 @@
 			return; // popped out: it is already its own window
 		}
 		el.classList.remove( 'osw-sandbox-hidden' );
-		document.body.classList.add( 'osw-sandbox-open' );
 	}
 
 	function hide() {
@@ -205,7 +204,6 @@
 		if ( el ) {
 			el.classList.add( 'osw-sandbox-hidden' );
 		}
-		document.body.classList.remove( 'osw-sandbox-open' );
 	}
 
 	function isVisible() {
@@ -432,6 +430,129 @@
 		return true;
 	}
 
+	/**
+	 * Start the sandbox if needed and send it one request.
+	 *
+	 * The named operations below all want the same preamble, and a caller outside this
+	 * file should not have to know that a sandbox has to exist before it can be asked
+	 * anything.
+	 *
+	 * `onProgress` is forwarded to whenReady: a cold start takes tens of seconds, and the
+	 * caller is usually something that wants to tell a human why nothing is happening.
+	 *
+	 * @param {string} action
+	 * @param {Object} [payload]
+	 * @param {Function} [onProgress]
+	 * @return {Promise<Object>}
+	 */
+	async function call( action, payload, onProgress ) {
+		if ( !sandboxEnabled() ) {
+			return { ok: false, code: 'sandbox-disabled',
+				message: 'The code sandbox is not enabled on this wiki.' };
+		}
+		ensure();
+		var ready = await whenReady( onProgress );
+		if ( !ready ) {
+			return { ok: false, code: 'sandbox-not-ready',
+				message: 'The sandbox did not finish starting.' };
+		}
+		var result = await request( action, payload || {} );
+		// `undefined` means the lab answered and the command returned no value, which
+		// is how plenty of JupyterLab commands succeed - request() reports a timeout or
+		// a closed window as an explicit error object, never as undefined. Reporting it
+		// as a failure told the model that `open-file` had failed every time it worked.
+		return result === undefined ? { ok: true, result: null } : result;
+	}
+
+	/**
+	 * Upload the open notebook to the wiki as a WikiFile.
+	 *
+	 * `label` is what a reader sees; the page is named by OSW-ID, which is the wiki's
+	 * identifier for an entity.
+	 *
+	 * @param {string} [label]
+	 * @param {string} [comment]
+	 * @param {Function} [onProgress]
+	 * @return {Promise<Object>} { ok, title, label, url } or { error }
+	 */
+	function saveNotebookToWiki( label, comment, onProgress ) {
+		return call( 'save_notebook_to_wiki',
+			{ label: label || '', comment: comment || '' }, onProgress );
+	}
+
+	/**
+	 * Write a notebook into the sandbox and open it.
+	 *
+	 * @param {string} name
+	 * @param {Array} cells [ { type: 'code'|'markdown', source: '...' } ]
+	 * @return {Promise<Object>}
+	 */
+	function createNotebook( name, cells, onProgress ) {
+		return call( 'create_notebook', { name: name, cells: cells || [] }, onProgress );
+	}
+
+	/**
+	 * Run one piece of Python, appended to the open notebook so the user keeps it.
+	 *
+	 * @param {string} code
+	 * @return {Promise<Object>} includes `output`
+	 */
+	function runCode( code, onProgress ) {
+		return call( 'run', { code: code }, onProgress );
+	}
+
+	/**
+	 * Every jupyterlab-ai-commands command the sandbox offers, with its argument schema.
+	 *
+	 * Asked of the running lab rather than listed here, so it reflects the installed
+	 * version instead of whatever was true when this was written.
+	 *
+	 * @param {Function} [onProgress]
+	 * @return {Promise<Object>} { commands: [ { command, label, caption, args } ] }
+	 */
+	function listCommands( onProgress ) {
+		return call( 'list_commands', {}, onProgress );
+	}
+
+	/**
+	 * Upload a file from the sandbox to the wiki as a WikiFile.
+	 *
+	 * @param {string} path  path in the sandbox, e.g. 'results.csv'
+	 * @param {string} [label]
+	 * @param {string} [comment]
+	 * @param {Function} [onProgress]
+	 * @return {Promise<Object>} { ok, title, label, url, path }
+	 */
+	function saveFileToWiki( path, label, comment, onProgress ) {
+		return call( 'save_file_to_wiki',
+			{ path: path, label: label || '', comment: comment || '' }, onProgress );
+	}
+
+	/**
+	 * Copy a wiki file into the sandbox so code can read it.
+	 *
+	 * @param {string} title  a 'File:...' page title
+	 * @param {string} [path] where to put it; defaults to the wiki's own file name
+	 * @param {Function} [onProgress]
+	 * @return {Promise<Object>} { ok, path, title, size, mime }
+	 */
+	function loadFileFromWiki( title, path, onProgress ) {
+		return call( 'load_file_from_wiki',
+			{ title: title, path: path || '' }, onProgress );
+	}
+
+	/**
+	 * Any jupyterlab-ai-commands command, which is what the in-lab agent uses.
+	 *
+	 * @param {string} command
+	 * @param {Object} [commandArgs]
+	 * @param {Function} [onProgress]
+	 * @return {Promise<Object>}
+	 */
+	function labCommand( command, commandArgs, onProgress ) {
+		return call( 'command', { command: command, args: commandArgs || {} }, onProgress );
+	}
+
 	// Before anything asks: a popped-out sandbox from an earlier page in this tab is
 	// still running, and the assistant should talk to that rather than start another.
 	adoptPoppedOut();
@@ -449,6 +570,14 @@
 		warmUp: warmUp,
 		whenReady: whenReady,
 		request: request,
+		call: call,
+		saveNotebookToWiki: saveNotebookToWiki,
+		saveFileToWiki: saveFileToWiki,
+		loadFileFromWiki: loadFileFromWiki,
+		createNotebook: createNotebook,
+		runCode: runCode,
+		labCommand: labCommand,
+		listCommands: listCommands,
 		isOpen: function () {
 			return !!targetWindow();
 		},
