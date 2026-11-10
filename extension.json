@@ -45,17 +45,28 @@
 			"remoteExtPath": "JupyterLite/modules/ext.osw.ui.jupyterlite",
 			"dependencies": [
 				"mediawiki.util",
-				"mediawiki.api"
+				"mediawiki.api",
+				"jquery"
 			],
 			"scripts": [
+				"sandbox.js",
 				"jupyterlite.js"
 			],
 			"messages": [
-				"jupyterlite-portlet-open",
-				"jupyterlite-portlet-tooltip",
+				"jupyterlite-notebook-missing",
 				"jupyterlite-open-notebook",
 				"jupyterlite-open-notebook-tooltip",
-				"jupyterlite-notebook-missing"
+				"jupyterlite-portlet-open",
+				"jupyterlite-portlet-tooltip",
+				"jupyterlite-sandbox-hide",
+				"jupyterlite-sandbox-popout",
+				"jupyterlite-sandbox-popup-blocked",
+				"jupyterlite-sandbox-title",
+				"jupyterlite-sandbox-toggle",
+				"jupyterlite-sandbox-toggle-tooltip"
+			],
+			"styles": [
+				"sandbox.css"
 			]
 		}
 	},

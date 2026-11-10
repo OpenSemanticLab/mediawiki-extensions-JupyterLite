@@ -165,6 +165,27 @@
 			} );
 		}
 
+		// Beside the "open in a tab" link: the panel keeps the article on screen, which
+		// is usually what someone reading it wants. Only offered when the sandbox client
+		// loaded - it ships in this module, but a deployment may have it disabled.
+		if ( mw.osw && mw.osw.sandbox && mw.osw.sandbox.isEnabled() ) {
+			var panel = mw.util.addPortletLink(
+				'p-tb',
+				'#',
+				mw.msg( 'jupyterlite-sandbox-toggle' ),
+				't-jupyterlite-panel',
+				mw.msg( 'jupyterlite-sandbox-toggle-tooltip' )
+			);
+			if ( panel ) {
+				$( panel ).on( 'click', function ( event ) {
+					event.preventDefault();
+					// A click is a user gesture, so this is also the one path that may
+					// open a real window later without being popup-blocked.
+					mw.osw.sandbox.toggle();
+				} );
+			}
+		}
+
 		var notebook = notebookOnThisPage();
 		if ( !notebook ) {
 			return;

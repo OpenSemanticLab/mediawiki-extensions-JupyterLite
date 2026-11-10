@@ -1,0 +1,65 @@
+/* The sandbox panel.
+ *
+ * Full viewport: a notebook at half width is a notebook you scroll sideways, and the
+ * lab's own chrome - file browser, toolbar, output area - needs the room before the
+ * code does.
+ *
+ * It covers the page rather than sitting beside it, so the chat has to stay on top: the
+ * conversation is what drives the sandbox, and losing it behind the thing it opened
+ * would strand the user. That is what the z-index below is for - the chat sits at 1099,
+ * its dialogs at 1100.
+ */
+.osw-sandbox-panel {
+	position: fixed;
+	/* `inset` rather than width/height: a width of 100vw plus a border would overflow
+	 * and add a horizontal scrollbar to the page underneath. */
+	inset: 0;
+	z-index: 900; /* under the chat popup and its dialogs, over page content */
+	display: flex;
+	flex-direction: column;
+	background: #fff;
+}
+
+/* Hidden, not removed: the kernel keeps running and the ~40s cold start is not paid
+ * again the next time the assistant needs it. `visibility` rather than `display:none`
+ * because a display:none iframe is treated as having no layout, and some browsers
+ * throttle it harder. */
+.osw-sandbox-hidden {
+	visibility: hidden;
+	pointer-events: none;
+	/* Off to the left. The panel is full width, so this clears the viewport exactly. */
+	transform: translateX( -100% );
+}
+
+.osw-sandbox-header {
+	display: flex;
+	align-items: center;
+	gap: 0.5em;
+	padding: 0.4em 0.6em;
+	background: #f8f9fa;
+	border-bottom: 1px solid #c8ccd1;
+}
+
+.osw-sandbox-title {
+	flex: 1;
+	font-weight: bold;
+}
+
+.osw-sandbox-btn {
+	border: 0;
+	background: transparent;
+	cursor: pointer;
+	font-size: 1.1em;
+	line-height: 1;
+	padding: 0.2em 0.4em;
+}
+
+.osw-sandbox-btn:hover {
+	background: #eaecf0;
+}
+
+#osw-sandbox-frame {
+	flex: 1;
+	width: 100%;
+	border: 0;
+}

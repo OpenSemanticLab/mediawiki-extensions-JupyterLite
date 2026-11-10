@@ -14,5 +14,11 @@
 	"jupyterlite-portlet-tooltip": "Open a Python notebook that runs in your browser and can read and write this wiki as you",
 	"jupyterlite-open-notebook": "Open in sandbox",
 	"jupyterlite-open-notebook-tooltip": "Open this notebook in the in-browser Python sandbox",
-	"jupyterlite-notebook-missing": "This notebook could not be found on the wiki."
+	"jupyterlite-notebook-missing": "This notebook could not be found on the wiki.",
+	"jupyterlite-sandbox-title": "Python sandbox",
+	"jupyterlite-sandbox-popout": "Move to its own window (keeps running when you navigate away)",
+	"jupyterlite-sandbox-hide": "Hide the sandbox (it keeps running)",
+	"jupyterlite-sandbox-toggle": "Python sandbox panel",
+	"jupyterlite-sandbox-toggle-tooltip": "Show or hide the Python sandbox beside this page",
+	"jupyterlite-sandbox-popup-blocked": "Your browser blocked the new window. The sandbox is in the panel instead."
 }
